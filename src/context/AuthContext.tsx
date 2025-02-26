@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, ReactNode } from "react";
+import { createContext, useState, useContext, ReactNode, useEffect } from "react";
 import { User, LoginCredentials, AuthResponse, AuthContextType } from "../types/auth.types";
 
 // Skapa kontext
@@ -41,6 +41,37 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         setUser(null);
     }
+
+    // Validera token
+    const checkToken = async () => {
+        const token = localStorage.getItem("authToken");
+
+        if (!token) {
+            return
+        }
+
+        try {
+            const res = await fetch("http://localhost:5000/api/auth/validate", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setUser(data.user);
+            }
+        } catch (error) {
+            console.error("Token error:", error);
+            localStorage.removeItem("authToken");
+            setUser(null);
+        }
+    }
+
+    useEffect(() => {
+        checkToken();
+    }, [])
 
     return (
         <AuthContext.Provider value={{ user, login, logout }}>
