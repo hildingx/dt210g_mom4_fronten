@@ -1,11 +1,16 @@
 import { useState } from "react"
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const { login } = useAuth();
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         // Reset error msg
@@ -18,6 +23,15 @@ const LoginPage = () => {
         }
 
         console.log("inloggning försökt med: ", { username, password });
+
+        try {
+            await login({ username, password });
+            navigate("/admin");
+
+        } catch (error) {
+            console.error("Login error:", error);
+            setError("Inloggningen misslyckades. Kontrollera användarnamn och lösenord.")
+        }
     }
 
     return (
@@ -37,7 +51,7 @@ const LoginPage = () => {
                 <div>
                     <label htmlFor="password">Lösenord:</label>
                     <input
-                        type="text"
+                        type="password"
                         id="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
