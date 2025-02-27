@@ -10,6 +10,7 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
+    const [token, setToken] = useState<string | null>(localStorage.getItem("authToken"));
 
     const login = async (credentials: LoginCredentials) => {
         // eslint-disable-next-line no-useless-catch
@@ -27,6 +28,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             const data = await res.json() as AuthResponse;
 
             localStorage.setItem("authToken", data.token);
+            setToken(data.token);
             setUser(data.user);
 
             console.log("Inloggad användare:", data.user);
@@ -38,7 +40,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const logout = () => {
         localStorage.removeItem("authToken");
-
+        setToken(null);
         setUser(null);
     }
 
@@ -74,7 +76,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ user, token, login, logout }}>
             {children}
         </AuthContext.Provider>
     )

@@ -15,6 +15,7 @@ const Header = () => {
                     }
                 </li>
             </ul>
+            <p>Inloggad som: {user ? user.username : "!"}</p>
         </header>
     )
 }
