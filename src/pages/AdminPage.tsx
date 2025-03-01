@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { fetchProducts } from "../api/products";
+import { fetchProducts, deleteProduct } from "../api/products";
 import AddProduct from "../components/AddProduct";
+import EditProduct from "../components/EditProduct";
 
 interface Product {
     _id: string;
@@ -18,6 +19,7 @@ const AdminPage = () => {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>("");
+    const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
     const getProducts = async () => {
         try {
@@ -27,6 +29,16 @@ const AdminPage = () => {
             setError("Misslyckades att hämta produkter" + error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleDelete = async (productId: string) => {
+        if (!token) return;
+        try {
+            await deleteProduct(token, productId);
+            getProducts();
+        } catch (error) {
+            console.error("Misslyckades att ta bort produkt:", error);
         }
     };
 
@@ -49,9 +61,22 @@ const AdminPage = () => {
                 {products.map((product) => (
                     <li key={product._id}>
                         {product.name} - {product.price} kr ({product.stock} i lager)
+                        <button onClick={() => setEditingProduct(product)}>Redigera</button>
+                        <button onClick={() => handleDelete(product._id)}>Ta bort</button>
                     </li>
                 ))}
             </ul>
+
+            {editingProduct && (
+                <EditProduct
+                    product={editingProduct}
+                    token={token!}
+                    onUpdate={() => {
+                        setEditingProduct(null);
+                        getProducts();
+                    }}
+                />
+            )}
         </div>
     );
 };

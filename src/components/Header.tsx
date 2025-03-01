@@ -17,7 +17,7 @@ const Header = () => {
             </ul>
             <p>Inloggad som: {user ? user.username : "!"}</p>
         </header>
-    )
+    ) // Fixa inloggad som
 }
 
 export default Header
