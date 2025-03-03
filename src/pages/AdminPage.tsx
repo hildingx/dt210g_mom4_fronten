@@ -19,6 +19,7 @@ const AdminPage = () => {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>("");
+    const [successMessage, setSuccessMessage] = useState<string>("");
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
     const getProducts = async () => {
@@ -34,8 +35,12 @@ const AdminPage = () => {
 
     const handleDelete = async (productId: string) => {
         if (!token) return;
+
+        const confirmDelete = window.confirm("Är du säker på att du vill ta bort denna produkt?");
+        if (!confirmDelete) return;
         try {
             await deleteProduct(token, productId);
+            setSuccessMessage("Produkten har tagits bort.");
             getProducts();
         } catch (error) {
             console.error("Misslyckades att ta bort produkt:", error);
@@ -55,6 +60,7 @@ const AdminPage = () => {
 
             {loading && <p>Laddar produkter...</p>}
             {error && <p style={{ color: "red" }}>{error}</p>}
+            {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
 
             <h2>Produkter</h2>
             <ul>

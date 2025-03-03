@@ -1,0 +1,13 @@
+/* Övergripande CSS */
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-color: #f8f8f8;
+}

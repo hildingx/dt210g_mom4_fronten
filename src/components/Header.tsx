@@ -15,9 +15,9 @@ const Header = () => {
                     }
                 </li>
             </ul>
-            <p>Inloggad som: {user ? user.username : "!"}</p>
+            {user && <p>Inloggad som: {user ? user.username : "!"}</p>}
         </header>
-    ) // Fixa inloggad som
+    )
 }
 
 export default Header

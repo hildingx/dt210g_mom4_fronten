@@ -1,28 +1,52 @@
 import axios from "axios";
 
+const API_URL = "http://localhost:5000/api/products";
+
 // Hämta alla produkter
 export const fetchProducts = async () => {
-    const res = await axios.get("http://localhost:5000/api/products");
-    return res.data;
+    try {
+        const res = await axios.get(API_URL);
+        return res.data;
+    } catch (error) {
+        console.error("Fel vid hämtning av produkter:", error);
+        throw new Error("Kunde inte hämta produkter");
+    }
 };
 
 // Skapa ny produkt
 export const createProduct = async (token: string, productData: object) => {
-    return await axios.post("http://localhost:5000/api/products", productData, {
-        headers: { Authorization: `Bearer ${token}` },
-    });
+    try {
+        const res = await axios.post(API_URL, productData, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return res.data;
+    } catch (error) {
+        console.error("Fel vid skapande av produkt:", error);
+        throw new Error("Kunde inte skapa produkt");
+    }
 };
 
 // Uppdatera produkt
 export const updateProduct = async (token: string, productId: string, productData: object) => {
-    return await axios.put(`http://localhost:5000/api/products/${productId}`, productData, {
-        headers: { Authorization: `Bearer ${token}` }
-    });
+    try {
+        const res = await axios.put(`${API_URL}/${productId}`, productData, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return res.data;
+    } catch (error) {
+        console.error("Fel vid uppdatering av produkt:", error);
+        throw new Error("Kunde inte uppdatera produkt");
+    }
 };
 
 // Ta bort produkt
 export const deleteProduct = async (token: string, productId: string) => {
-    return await axios.delete(`http://localhost:5000/api/products/${productId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-    });
+    try {
+        await axios.delete(`${API_URL}/${productId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+    } catch (error) {
+        console.error("Fel vid borttagning av produkt:", error);
+        throw new Error("Kunde inte ta bort produkt");
+    }
 };
