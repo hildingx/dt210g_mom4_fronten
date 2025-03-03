@@ -1,17 +1,24 @@
+// Kontext för autentisering och användarhantering
+
+// Importera nödvändiga React-funktioner och typer
 import { createContext, useState, useContext, ReactNode, useEffect } from "react";
 import { User, LoginCredentials, AuthResponse, AuthContextType } from "../types/auth.types";
 
-// Skapa kontext
+// Skapa kontext för autentisering
 const AuthContext = createContext<AuthContextType | null>(null);
 
+// Typ för props till AuthProvider-komponenten
 interface AuthProviderProps {
     children: ReactNode
 }
 
+// Huvudkomponent för att hantera autentiseringstillstånd
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+    // State för inloggad användare och JWT-token
     const [user, setUser] = useState<User | null>(null);
     const [token, setToken] = useState<string | null>(localStorage.getItem("authToken"));
 
+    // Funktion för att logga in användaren
     const login = async (credentials: LoginCredentials) => {
         // eslint-disable-next-line no-useless-catch
         try {
@@ -38,13 +45,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
     }
 
+    // Funktion för att logga ut användaren
     const logout = () => {
         localStorage.removeItem("authToken");
         setToken(null);
         setUser(null);
     }
 
-    // Validera token
+    // Funktion för att validera token vid sidladdning
     const checkToken = async () => {
         const token = localStorage.getItem("authToken");
 
@@ -71,6 +79,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
     }
 
+    // Kör checkToken vid sidladdning för att se om användaren redan är inloggad
     useEffect(() => {
         checkToken();
     }, [])
@@ -82,6 +91,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     )
 }
 
+// Hook för att använda autentiseringskontexten i andra komponenter
 export const useAuth = (): AuthContextType => {
     const context = useContext(AuthContext);
 

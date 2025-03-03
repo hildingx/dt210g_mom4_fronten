@@ -1,3 +1,5 @@
+// API-funktioner för att hantera produkter med Axios
+
 import axios from "axios";
 
 const API_URL = "http://localhost:5000/api/products";
