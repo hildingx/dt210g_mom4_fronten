@@ -2,7 +2,7 @@
 
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/products";
+const API_URL = "https://dt210g-mom4-backend-1.onrender.com/api/products";
 
 // Hämta alla produkter
 export const fetchProducts = async () => {

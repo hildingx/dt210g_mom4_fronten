@@ -7,6 +7,8 @@ import { User, LoginCredentials, AuthResponse, AuthContextType } from "../types/
 // Skapa kontext för autentisering
 const AuthContext = createContext<AuthContextType | null>(null);
 
+const API_URL = "https://dt210g-mom4-backend-1.onrender.com/api";
+
 // Typ för props till AuthProvider-komponenten
 interface AuthProviderProps {
     children: ReactNode
@@ -22,7 +24,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const login = async (credentials: LoginCredentials) => {
         // eslint-disable-next-line no-useless-catch
         try {
-            const res = await fetch("http://localhost:5000/api/auth/login", {
+            const res = await fetch(`${API_URL}/auth/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -61,7 +63,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
 
         try {
-            const res = await fetch("http://localhost:5000/api/auth/validate", {
+            const res = await fetch(`${API_URL}/auth/validate`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
